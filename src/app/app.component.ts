@@ -40,16 +40,23 @@ export class AppComponent implements OnDestroy {
     return Math.random().toString(36).substr(2);
   }
   isValidate(): boolean {
-    let flag = false;
-    Object.keys(this.inputMap).forEach(key => {
-      if ('VALID' === this.inputMap[key]['myform']['status']) {
-        flag = true;
+    let flag = true;
+    let keys = Object.keys(this.inputMap);
+    let theValidate = this.myform.status === 'VALID';
+    keys.forEach(key => {
+      if ('INVALID' === this.inputMap[key]['myform']['status']) {
+        return flag = false;
       }
     });
-    return flag;
+    return keys.length > 0 ? (flag && theValidate) : theValidate;
   }
   save() {
-    console.log(this.inputMap);
+    
+    if (!this.isValidate()) {
+      alert('请输入正确的手机号码!');
+    } else {
+      alert('submit!');
+    }
   }
   remove(key) {
     console.log(key);
