@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-input',
@@ -6,13 +7,19 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
   styleUrls: ['./input.component.css']
 })
 export class InputComponent implements OnInit {
+  myform: FormGroup;
   mobile;
   @Input() container;
   @Input() randomString;
   @Input() ref; // 这里需要注入当前组件的ViewRef
   @Output() removeChanged = new EventEmitter();
   constructor(
-  ) { }
+    private fb: FormBuilder
+  ) { 
+    this.myform = this.fb.group({
+      mobile: ['', Validators.required]
+    });
+  }
 
   ngOnInit() {
   }

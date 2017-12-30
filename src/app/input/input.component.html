@@ -1,4 +1,9 @@
-<div>
-  <!-- <pre>{{ mobile }}</pre> -->
-  手机号码：<input type="text" name="mobile" [(ngModel)]="mobile"> <button type="button" (click)="remove()">-</button>
-</div>
+<form class="form-inline" [formGroup]="myform" novalidate>
+  <div class="form-group">
+      <p>Form status: {{ myform.value | json }}</p>
+      <p>Form status: {{ myform.status | json }}</p>
+      <label for="mobile">手机号码：</label>
+      <input class="form-control" id="mobile" type="text" formControlName="mobile">
+  </div>
+  <button class="btn btn-default" type="button" (click)="remove()">-</button>
+</form>
