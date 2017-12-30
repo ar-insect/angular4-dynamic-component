@@ -12,7 +12,7 @@ import { InputComponent } from './input/input.component';
 })
 export class AppComponent implements OnDestroy {
   myform: FormGroup;
-  mobile;
+  // mobile;
   componentRef: ComponentRef<InputComponent>;
   inputMap = {};
   @ViewChild("inputContainer", { read: ViewContainerRef }) container: ViewContainerRef;
@@ -51,11 +51,14 @@ export class AppComponent implements OnDestroy {
     return keys.length > 0 ? (flag && theValidate) : theValidate;
   }
   save() {
-    
     if (!this.isValidate()) {
       alert('请输入正确的手机号码!');
     } else {
-      alert('submit!');
+      let arr = [this.myform.get('mobile').value];
+      Object.keys(this.inputMap).forEach(k => {
+        arr.push(this.inputMap[k].myform.get('mobile').value);
+      });
+      alert(arr.join(','));
     }
   }
   remove(key) {
