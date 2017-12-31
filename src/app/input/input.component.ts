@@ -8,7 +8,6 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 })
 export class InputComponent implements OnInit, OnDestroy {
   myform: FormGroup;
-  // mobile;
   @Input() container;
   @Input() randomString;
   @Input() ref; // 这里需要注入当前组件的ViewRef
@@ -30,6 +29,7 @@ export class InputComponent implements OnInit, OnDestroy {
     this.container.remove(index); // 移除当前组件
     this.removeChanged.emit(this.randomString);
   }
+
   ngOnDestroy() {
   }
 }

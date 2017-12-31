@@ -12,9 +12,8 @@ import { InputComponent } from './input/input.component';
 })
 export class AppComponent implements OnDestroy {
   myform: FormGroup;
-  // mobile;
-  componentRef: ComponentRef<InputComponent>;
   inputMap = {};
+  componentRef: ComponentRef<InputComponent>;
   @ViewChild("inputContainer", { read: ViewContainerRef }) container: ViewContainerRef;
   constructor(
     private fb: FormBuilder,
@@ -36,9 +35,11 @@ export class AppComponent implements OnDestroy {
     this.inputMap[ rndString ] = this.componentRef.instance;
     this.componentRef.instance.removeChanged.subscribe((key: string) => this.remove(key));
   }
+
   randomString(): string {
     return Math.random().toString(36).substr(2);
   }
+
   isValidate(): boolean {
     let flag = true;
     let keys = Object.keys(this.inputMap);
@@ -50,7 +51,8 @@ export class AppComponent implements OnDestroy {
     });
     return keys.length > 0 ? (flag && theValidate) : theValidate;
   }
-  save() {
+
+  save(): void {
     if (!this.isValidate()) {
       alert('请输入正确的手机号码!');
     } else {
@@ -61,10 +63,12 @@ export class AppComponent implements OnDestroy {
       alert(arr.join(','));
     }
   }
-  remove(key) {
+
+  remove(key: string): void {
     // console.log(key);
     delete this.inputMap[key];
   }
+
   ngOnDestroy() {
     this.componentRef.destroy();
   }
