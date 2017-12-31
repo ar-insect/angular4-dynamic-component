@@ -62,7 +62,7 @@ export class AppComponent implements OnDestroy {
     }
   }
   remove(key) {
-    console.log(key);
+    // console.log(key);
     delete this.inputMap[key];
   }
   ngOnDestroy() {
