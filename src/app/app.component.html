@@ -8,4 +8,4 @@
   <button class="btn btn-default" type="button" (click)="createComponent()">+</button>
 </form>
 <ng-template #inputContainer></ng-template>
-<button class="btn btn-default" type="button" (click)="save()">保存</button>
+<button class="btn btn-default" type="button" (click)="save()" [disabled]="!isValidate()">保存</button>

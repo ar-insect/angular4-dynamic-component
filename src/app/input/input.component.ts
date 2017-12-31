@@ -8,7 +8,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 })
 export class InputComponent implements OnInit {
   myform: FormGroup;
-  mobile;
+  // mobile;
   @Input() container;
   @Input() randomString;
   @Input() ref; // 这里需要注入当前组件的ViewRef
