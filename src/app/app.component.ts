@@ -21,7 +21,7 @@ export class AppComponent implements OnDestroy {
     private resolver: ComponentFactoryResolver
   ) {
     this.myform = this.fb.group({
-      mobile: ['', Validators.required]
+      mobile: [ '', Validators.required ]
     });
   }
 
