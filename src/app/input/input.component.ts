@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 @Component({
@@ -6,7 +6,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
   templateUrl: './input.component.html',
   styleUrls: ['./input.component.css']
 })
-export class InputComponent implements OnInit {
+export class InputComponent implements OnInit, OnDestroy {
   myform: FormGroup;
   // mobile;
   @Input() container;
@@ -29,7 +29,7 @@ export class InputComponent implements OnInit {
     // console.log(this.ref);
     this.container.remove(index); // 移除当前组件
     this.removeChanged.emit(this.randomString);
-    
   }
-
+  ngOnDestroy() {
+  }
 }
