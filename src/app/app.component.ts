@@ -20,8 +20,45 @@ export class AppComponent implements OnDestroy {
     private resolver: ComponentFactoryResolver
   ) {
     this.myform = this.fb.group({
-      mobile: [ '', Validators.required ]
+      email: [
+          '', 
+          [ 
+            Validators.required, 
+            Validators.pattern("^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$")
+          ]
+      ]
     });
+    this.myform.valueChanges
+      .subscribe(data => this.onValueChanged(data));
+    this.onValueChanged();
+  }
+
+  formErrors = {
+    'email': '',
+  };
+
+  validationMessages = {
+    'email': {
+      'required': '邮箱必须输入。',
+      'pattern': '请输入正确的邮箱地址。'
+    }
+  }
+
+  onValueChanged(data?: any) {
+    if (!this.myform) {
+      return;
+    }
+    const form = this.myform;
+    for (const field in this.formErrors) {
+      this.formErrors[field] = '';
+      const control = form.get(field);
+      if (control && control.dirty && !control.valid) {
+        const messages = this.validationMessages[field];
+        for (const key in control.errors) {
+          this.formErrors[field] += messages[key] + ' ';
+        }
+      }
+    }
   }
 
   createComponent() {
@@ -54,11 +91,11 @@ export class AppComponent implements OnDestroy {
 
   save(): void {
     if (!this.isValidate()) {
-      alert('请输入正确的手机号码!');
+      alert('请输入正确的邮箱地址!');
     } else {
-      let arr = [this.myform.get('mobile').value];
+      let arr = [this.myform.get('email').value];
       Object.keys(this.inputMap).forEach(k => {
-        arr.push(this.inputMap[k].myform.get('mobile').value);
+        arr.push(this.inputMap[k].myform.get('email').value);
       });
       alert(arr.join(','));
     }

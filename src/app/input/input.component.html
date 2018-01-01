@@ -1,11 +1,14 @@
 <div class="row">
   <form class="form-inline" [formGroup]="myform" novalidate>
-      <div class="form-group">
+      <div class="form-group has-feedback">
           <!-- <p>Form status: {{ myform.value | json }}</p>
           <p>Form status: {{ myform.status | json }}</p> -->
-          <label for="mobile">手机号码：</label>
-          <input class="form-control" id="mobile" type="text" formControlName="mobile">
+          <label for="email">电子邮箱：</label>
+          <input class="form-control" id="email" type="email" formControlName="email">
       </div>
       <button class="btn btn-default" type="button" (click)="remove()">-</button>
+      <div *ngIf="formErrors.email" class="text-danger">
+        {{ formErrors.email }}
+      </div>
   </form>
 </div>
