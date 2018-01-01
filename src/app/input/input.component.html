@@ -1,10 +1,11 @@
 <div class="row">
   <form class="form-inline" [formGroup]="myform" novalidate>
-      <div class="form-group has-feedback">
+      <div class="form-group has-feedback" [ngClass]="{'has-error': formErrors.email, 'has-success': myform.get('email').status === 'VALID' }">
           <!-- <p>Form status: {{ myform.value | json }}</p>
           <p>Form status: {{ myform.status | json }}</p> -->
           <label for="email">电子邮箱：</label>
           <input class="form-control" id="email" type="email" formControlName="email">
+          <span *ngIf="myform.get('email').status === 'VALID'" class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"></span>
       </div>
       <button class="btn btn-default" type="button" (click)="remove()">-</button>
       <div *ngIf="formErrors.email" class="text-danger">
