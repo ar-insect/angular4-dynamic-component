@@ -62,7 +62,7 @@ export class InputComponent implements OnInit, OnDestroy {
   
   remove(): void {
     let index = this.container.indexOf(this.ref); // 获取到当前组件在整个容器的index
-    // console.log(this.ref);
+    console.log(this.container);
     this.container.remove(index); // 移除当前组件
     this.removeChanged.emit(this.randomString);
   }
