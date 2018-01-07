@@ -1,6 +1,6 @@
 import {
   Component, ViewChild, ViewContainerRef, ComponentFactory,
-  ComponentRef, ComponentFactoryResolver, OnDestroy
+  ComponentRef, ComponentFactoryResolver, OnInit, OnDestroy
 } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { InputComponent } from './input/input.component';
@@ -10,7 +10,8 @@ import { InputComponent } from './input/input.component';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnDestroy {
+export class AppComponent implements OnInit, OnDestroy {
+  information; // test
   myform: FormGroup;
   inputMap = {};
   componentRef: ComponentRef<InputComponent>;
@@ -31,6 +32,18 @@ export class AppComponent implements OnDestroy {
     this.myform.valueChanges
       .subscribe(data => this.onValueChanged(data));
     this.onValueChanged();
+  }
+
+  ngOnInit(): void {
+    // test
+    this.information = {
+      111: {id: 111, name: "fsdf", checked: true},
+      222: {id: 222, name: "adfff", checked: true},
+      333: {id: 333, name: "fsdfsdf", checked: false},
+    };
+    setTimeout(() => {
+      this.information["333"]["checked"] = true;
+    }, 5000);
   }
 
   formErrors = {
@@ -86,7 +99,14 @@ export class AppComponent implements OnDestroy {
         return flag = false;
       }
     });
-    return keys.length > 0 ? (flag && theValidate) : theValidate;
+    // test
+    let f = true;
+    Object.keys(this.information).forEach(it => {
+      if (this.information[it]["checked"] === false) {
+        f = false;
+      }
+    });
+    return keys.length > 0 ? (flag && theValidate) : (theValidate && f);
   }
 
   save(): void {
