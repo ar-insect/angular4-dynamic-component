@@ -6,12 +6,14 @@ import { FormsModule } from '@angular/forms';
 import { DropdownComponent } from './dropdown.component';
 import { DropdownButtonComponent } from './dropdown-button.component';
 import { DropdownDirective } from './dropdown.directive';
+import { TreeModule } from '../tree/tree.module';
 
 @NgModule({
   imports: [
     CommonModule,
     OverlayModule,
     FormsModule,
+    TreeModule,
   ],
   declarations: [
     DropdownComponent,

@@ -6,7 +6,7 @@ import { AppComponent } from './app.component';
 import { InputComponent } from './input/input.component';
 
 import { DropdownModule } from './components/dropdown/dropdown.module';
-
+import { TreeModule } from './components/tree/tree.module';
 
 @NgModule({
   declarations: [
@@ -18,6 +18,7 @@ import { DropdownModule } from './components/dropdown/dropdown.module';
     FormsModule,
     ReactiveFormsModule,
     DropdownModule,
+    TreeModule,
   ],
   entryComponents: [ InputComponent ],
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ],

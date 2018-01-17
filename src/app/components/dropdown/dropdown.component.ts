@@ -22,6 +22,7 @@ import { mapTo } from 'rxjs/operators/mapTo';
 import { debounceTime } from 'rxjs/operators/debounceTime';
 
 import { DropdownDirective } from './dropdown.directive';
+import { TreeComponent } from '../tree/tree.component';
 
 
 @Component({
@@ -45,7 +46,7 @@ import { DropdownDirective } from './dropdown.directive';
         (mouseleave)="_onMouseLeaveEvent($event)"
         (click)="_clickDropDown($event)"
         >
-        <div style="border:1px solid #ccc;background:#eee;">test...test...const..</div>
+        <ng-content select="app-tree"></ng-content>
       </div>
     </ng-template>
   `,
@@ -57,7 +58,7 @@ export class DropdownComponent implements OnInit, OnDestroy, AfterViewInit {
   _triggerWidth = 0;
   _subscription: Subscription;
   get _hasBackdrop(): boolean {
-    return true;
+    return false; // if `click` must return true;
   }
   set wzVisible(value: boolean) {
     this._visible = value;
@@ -75,6 +76,7 @@ export class DropdownComponent implements OnInit, OnDestroy, AfterViewInit {
     return this._clickHide;
   }
   @ContentChild(DropdownDirective) _origin;
+  @ContentChild(TreeComponent) _tree;
   @Output() _visibleChange = new Subject<boolean>();
   @ViewChild(CdkConnectedOverlay) _cdkOverlay: CdkConnectedOverlay;
   _onMouseEnterEvent(e: MouseEvent): void {
@@ -111,7 +113,7 @@ export class DropdownComponent implements OnInit, OnDestroy, AfterViewInit {
 
   // callback
   _onVisibleChange = (visible: boolean) => {
-    console.log(visible);
+    // console.log(visible);
     if (visible) {
       this._setTriggerWidth();
     }
@@ -133,14 +135,14 @@ export class DropdownComponent implements OnInit, OnDestroy, AfterViewInit {
   ngAfterViewInit(): void {
     let mouse: Observable<boolean>;
     // hover
-    // const mouseEneterOrigin = fromEvent(this._origin.elementRef.nativeElement, 'mouseenter').pipe(mapTo(true));
-    // const mouseLeaveOrigin = fromEvent(this._origin.elementRef.nativeElement, 'mouseleave').pipe(mapTo(false));
-    // mouse = mouseEneterOrigin.pipe(merge(mouseLeaveOrigin));
+    const mouseEneterOrigin = fromEvent(this._origin.elementRef.nativeElement, 'mouseenter').pipe(mapTo(true));
+    const mouseLeaveOrigin = fromEvent(this._origin.elementRef.nativeElement, 'mouseleave').pipe(mapTo(false));
+    mouse = mouseEneterOrigin.pipe(merge(mouseLeaveOrigin));
     // click
-    mouse = fromEvent(this._origin.elementRef.nativeElement, 'click').pipe(mapTo(true));
-    this._renderer.listen(this._origin.elementRef.nativeElement, 'click', (e) => {
-      e.preventDefault();
-    });
+    // mouse = fromEvent(this._origin.elementRef.nativeElement, 'click').pipe(mapTo(true));
+    // this._renderer.listen(this._origin.elementRef.nativeElement, 'click', (e) => {
+    //   e.preventDefault();
+    // });
     const observable = mouse.pipe(merge(this._visibleChange));
     this._startSubscribe(observable);
   }
