@@ -5,6 +5,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
 import { InputComponent } from './input/input.component';
 
+import { DropdownModule } from './components/dropdown/dropdown.module';
+
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -14,6 +17,7 @@ import { InputComponent } from './input/input.component';
     BrowserModule,
     FormsModule,
     ReactiveFormsModule,
+    DropdownModule,
   ],
   entryComponents: [ InputComponent ],
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
