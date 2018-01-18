@@ -1,20 +1,22 @@
 import {
-  Component, ViewChild, ViewContainerRef, ComponentFactory,
-  ComponentRef, ComponentFactoryResolver, OnInit, OnDestroy
+  Component, ViewChild, ViewChildren, ViewContainerRef, ComponentFactory,
+  ComponentRef, ComponentFactoryResolver, OnInit, AfterViewInit, OnDestroy, QueryList, ElementRef
 } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { InputComponent } from './input/input.component';
+import { AppLayoutDirective } from './layout.directive';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnInit, OnDestroy {
+export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   information; // test
   myform: FormGroup;
   inputMap = {};
   componentRef: ComponentRef<InputComponent>;
+  @ViewChildren(AppLayoutDirective) appLayoutDirectives: QueryList<AppLayoutDirective>;
   @ViewChild("inputContainer", { read: ViewContainerRef }) container: ViewContainerRef;
   constructor(
     private fb: FormBuilder,
@@ -44,6 +46,23 @@ export class AppComponent implements OnInit, OnDestroy {
     setTimeout(() => {
       this.information["333"]["checked"] = true;
     }, 5000);
+  }
+
+  getElementRef(nodeName?: string): ElementRef | Array<AppLayoutDirective> {
+    let _ele;
+    if (!nodeName) { return this.appLayoutDirectives.toArray(); }
+    this.appLayoutDirectives.find(item => {
+      if (item.elementRef.nativeElement.nodeName === nodeName.toLocaleUpperCase()) {
+        _ele = item.elementRef;
+        return true;
+      }
+    });
+    return _ele;
+  }
+
+  ngAfterViewInit() {
+    console.log('app-tree', this.getElementRef('app-tree')['nativeElement']);
+    // console.log('app-dropdown', this.getElementRef('app-tree'));
   }
 
   formErrors = {

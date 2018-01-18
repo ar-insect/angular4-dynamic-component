@@ -11,7 +11,9 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Renderer2,
-  ViewEncapsulation } from '@angular/core';
+  QueryList,
+  ViewEncapsulation,
+  Inject} from '@angular/core';
 import { Observable, Subscribable } from 'rxjs/Observable';
 import { Observer } from 'rxjs/Observer';
 import { Subject } from 'rxjs/Subject';
@@ -23,7 +25,6 @@ import { debounceTime } from 'rxjs/operators/debounceTime';
 
 import { DropdownDirective } from './dropdown.directive';
 import { TreeComponent } from '../tree/tree.component';
-
 
 @Component({
   selector: 'app-dropdown',
@@ -54,7 +55,7 @@ import { TreeComponent } from '../tree/tree.component';
 })
 export class DropdownComponent implements OnInit, OnDestroy, AfterViewInit {
   private _visible = false;
-  private _clickHide = true;
+  private  _clickHide= true;
   _triggerWidth = 0;
   _subscription: Subscription;
   get _hasBackdrop(): boolean {
@@ -75,6 +76,7 @@ export class DropdownComponent implements OnInit, OnDestroy, AfterViewInit {
   get wzClickHide(): boolean {
     return this._clickHide;
   }
+
   @ContentChild(DropdownDirective) _origin;
   @ContentChild(TreeComponent) _tree;
   @Output() _visibleChange = new Subject<boolean>();
@@ -129,7 +131,7 @@ export class DropdownComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnInit() {
-    // console.log(this._nzOrigin);
+    // console.log(this._treeCont);
   }
 
   ngAfterViewInit(): void {
@@ -149,5 +151,8 @@ export class DropdownComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnDestroy() {}
 
-  constructor(private _renderer: Renderer2, protected _changeDetector: ChangeDetectorRef) { }
+  constructor(
+    private _renderer: Renderer2,
+    protected _changeDetector: ChangeDetectorRef
+  ) { }
 }

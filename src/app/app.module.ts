@@ -7,11 +7,13 @@ import { InputComponent } from './input/input.component';
 
 import { DropdownModule } from './components/dropdown/dropdown.module';
 import { TreeModule } from './components/tree/tree.module';
+import { AppLayoutDirective } from './layout.directive';
 
 @NgModule({
   declarations: [
     AppComponent,
     InputComponent,
+    AppLayoutDirective,
   ],
   imports: [
     BrowserModule,
