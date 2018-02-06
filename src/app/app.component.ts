@@ -1,6 +1,7 @@
 import {
   Component, ViewChild, ViewChildren, ViewContainerRef, ComponentFactory,
-  ComponentRef, ComponentFactoryResolver, OnInit, AfterViewInit, OnDestroy, QueryList, ElementRef
+  ComponentRef, ComponentFactoryResolver, OnInit, AfterViewInit, OnDestroy, QueryList, ElementRef,
+  Optional, Inject
 } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { InputComponent } from './input/input.component';
@@ -12,21 +13,21 @@ import { AppLayoutDirective } from './layout.directive';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
-  information; // test
   myform: FormGroup;
   inputMap = {};
   componentRef: ComponentRef<InputComponent>;
   @ViewChildren(AppLayoutDirective) appLayoutDirectives: QueryList<AppLayoutDirective>;
   @ViewChild("inputContainer", { read: ViewContainerRef }) container: ViewContainerRef;
+  tree = window['tree'];
   constructor(
     private fb: FormBuilder,
     private resolver: ComponentFactoryResolver
   ) {
     this.myform = this.fb.group({
       email: [
-          '', 
-          [ 
-            Validators.required, 
+          '',
+          [
+            Validators.required,
             Validators.pattern("^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$")
           ]
       ]
@@ -37,15 +38,6 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    // test
-    this.information = {
-      111: {id: 111, name: "fsdf", checked: true},
-      222: {id: 222, name: "adfff", checked: true},
-      333: {id: 333, name: "fsdfsdf", checked: false},
-    };
-    setTimeout(() => {
-      this.information["333"]["checked"] = true;
-    }, 5000);
   }
 
   getElementRef(nodeName?: string): ElementRef | Array<AppLayoutDirective> {
@@ -61,7 +53,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit() {
-    console.log('app-tree', this.getElementRef('app-tree')['nativeElement']);
+    // console.log('app-tree', this.getElementRef('app-tree')['nativeElement']);
     // console.log('app-dropdown', this.getElementRef('app-tree'));
   }
 
@@ -118,14 +110,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
         return flag = false;
       }
     });
-    // test
-    let f = true;
-    Object.keys(this.information).forEach(it => {
-      if (this.information[it]["checked"] === false) {
-        f = false;
-      }
-    });
-    return keys.length > 0 ? (flag && theValidate) : (theValidate && f);
+    return keys.length > 0 ? (flag && theValidate) : theValidate;
   }
 
   save(): void {

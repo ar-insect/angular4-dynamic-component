@@ -8,6 +8,7 @@ import { InputComponent } from './input/input.component';
 import { DropdownModule } from './components/dropdown/dropdown.module';
 import { TreeModule } from './components/tree/tree.module';
 import { AppLayoutDirective } from './layout.directive';
+import { InputModule } from './components/input/input.module';
 
 @NgModule({
   declarations: [
@@ -21,6 +22,7 @@ import { AppLayoutDirective } from './layout.directive';
     ReactiveFormsModule,
     DropdownModule,
     TreeModule,
+    InputModule,
   ],
   entryComponents: [ InputComponent ],
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
