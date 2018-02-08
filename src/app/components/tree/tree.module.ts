@@ -2,9 +2,9 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TreeComponent } from './tree.component';
-import { TreeNodeDirective } from './tree-node.directive';
-import { TreeLeafDirective } from './tree-leaf.directive';
 import { TreeInternalComponent } from './tree-internal.component';
+import { TreeNodeDirective } from './tree-node.directive';
+import { TreeNodeValueDirective } from './tree-node-value.directive';
 
 @NgModule({
   imports: [
@@ -15,7 +15,7 @@ import { TreeInternalComponent } from './tree-internal.component';
     TreeComponent,
     TreeInternalComponent,
     TreeNodeDirective,
-    TreeLeafDirective,
+    TreeNodeValueDirective,
   ],
   exports: [
     TreeComponent,

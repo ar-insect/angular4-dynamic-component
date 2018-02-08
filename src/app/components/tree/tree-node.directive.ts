@@ -1,5 +1,5 @@
 import { Directive, HostBinding, Input, ElementRef, HostListener } from '@angular/core';
-import { TreeInternalComponent } from './tree-internal.component';
+import { Tree } from './tree';
 
 @Directive({
   selector: '[appTreeNode]',
@@ -9,39 +9,40 @@ import { TreeInternalComponent } from './tree-internal.component';
   }
 })
 export class TreeNodeDirective {
-  private _expand;
-  private _data;
+  private _expand: boolean;
+  private _collapsed: boolean;
   @Input()
+  public tree: Tree;
+
   @HostBinding(`class.tree-node-expand`)
   set expand(value: boolean) {
     this._expand = value;
-  }
-
-  @Input()
-  set data(value: {[key: string]: number | string}) {
-    this._data = value;
-  }
-  get data(): {[key: string]: number | string} {
-    return this._data;
-  }
-
-  @HostListener('click', ['$event'])
-  onClick($event: Event) {
-    $event.stopPropagation();
-    this.expand = !this.expand;
-    // this._tree.isexpanded = this.expand;
-    // console.log(this.data);
   }
 
   get expand(): boolean {
     return this._expand;
   }
 
+  @HostBinding(`class.tree-node-collapsed`)
+  set collapsed(value: boolean) {
+    this._collapsed = value;
+  }
+
+  get collapsed(): boolean {
+    return this._collapsed;
+  }
+  @HostListener('click', ['$event'])
+  onClick($event: Event) {
+    $event.stopPropagation();
+    this.tree.switchFoldingType();
+    console.log(this.tree.isNodeExpanded());
+    this.expand = this.tree.isNodeExpanded();
+    this.collapsed = !this.tree.isNodeExpanded();
+  }
+
   constructor(
-    private _tree: TreeInternalComponent,
     private _elementRef: ElementRef
   ) {
-    // console.log(this.expand);
   }
 
 }

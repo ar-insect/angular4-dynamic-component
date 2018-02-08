@@ -21,7 +21,8 @@ import {
         <ul class="tree" *ngIf="tree">
           <li>
           <div>
-            <span (click)="onSwitchFoldingType()">{{ tree.node.ptext || "root" }}</span>
+            <span *ngIf="!tree.isLeaf()" appTreeNode [tree]="tree"> + </span>
+            <span appTreeNodeValue [tree]="tree">{{ tree.node.ptext || "root" }}</span>
           </div>
           <ng-template [ngIf]="tree.isNodeExpanded()">
             <app-tree-internal *ngFor="let child of tree.children" [tree]="child"></app-tree-internal>
@@ -35,10 +36,6 @@ import {
 
     @Input()
     tree: Tree;
-
-    public onSwitchFoldingType(): void {
-      this.tree.switchFoldingType();
-    }
 
     constructor(
     ) {
