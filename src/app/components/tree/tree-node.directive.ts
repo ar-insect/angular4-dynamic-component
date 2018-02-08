@@ -1,5 +1,6 @@
 import { Directive, HostBinding, Input, ElementRef, HostListener } from '@angular/core';
 import { Tree } from './tree';
+import { TreeInternalComponent } from './tree-internal.component';
 
 @Directive({
   selector: '[appTreeNode]',
@@ -11,8 +12,7 @@ import { Tree } from './tree';
 export class TreeNodeDirective {
   private _expand: boolean;
   private _collapsed: boolean;
-  @Input()
-  public tree: Tree;
+  private tree: Tree;
 
   @HostBinding(`class.tree-node-expand`)
   set expand(value: boolean) {
@@ -35,14 +35,16 @@ export class TreeNodeDirective {
   onClick($event: Event) {
     $event.stopPropagation();
     this.tree.switchFoldingType();
-    console.log(this.tree.isNodeExpanded());
+    // console.log(this.tree.isNodeExpanded());
     this.expand = this.tree.isNodeExpanded();
     this.collapsed = !this.tree.isNodeExpanded();
   }
 
   constructor(
-    private _elementRef: ElementRef
+    public component: TreeInternalComponent,
+    public _elementRef: ElementRef
   ) {
+    this.tree = this.component.tree;
   }
 
 }

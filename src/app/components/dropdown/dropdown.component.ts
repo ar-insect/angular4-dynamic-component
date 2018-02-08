@@ -24,7 +24,6 @@ import { mapTo } from 'rxjs/operators/mapTo';
 import { debounceTime } from 'rxjs/operators/debounceTime';
 
 import { DropdownDirective } from './dropdown.directive';
-import { TreeComponent } from '../tree/tree.component';
 
 @Component({
   selector: 'app-dropdown',
@@ -39,54 +38,59 @@ import { TreeComponent } from '../tree/tree.component';
       [cdkConnectedOverlayOrigin]="_origin"
       [cdkConnectedOverlayMinWidth]="_triggerWidth"
       [cdkConnectedOverlayOpen]="wzVisible"
-      (backdropClick)="_hide()"
-      >
-      <div
+      (backdropClick)="_hide()">
+      <div class="wz-drop-down"
         [style.minWidth.px]="_triggerWidth"
         (mouseenter)="_onMouseEnterEvent($event)"
         (mouseleave)="_onMouseLeaveEvent($event)"
-        (click)="_clickDropDown($event)"
-        >
+        (click)="_clickDropDown($event)">
         <ng-content select="app-tree"></ng-content>
       </div>
     </ng-template>
   `,
-  styleUrls: ['./dropdown.component.css'],
+  styleUrls: ['./dropdown.component.scss'],
 })
 export class DropdownComponent implements OnInit, OnDestroy, AfterViewInit {
   private _visible = false;
-  private  _clickHide= true;
-  _triggerWidth = 0;
-  _subscription: Subscription;
-  get _hasBackdrop(): boolean {
-    return false; // if `click` must return true;
+  private  _clickHide = false;
+  private _triggerWidth = 0;
+  private _subscription: Subscription;
+  private get _hasBackdrop(): boolean {
+    return this.wzTrigger === 'click';
   }
-  set wzVisible(value: boolean) {
+
+  @Input()
+  public wzTrigger: 'click' | 'hover' = 'hover'; // 默认是`hover`
+
+  public set wzVisible(value: boolean) {
     this._visible = value;
   }
 
-  get wzVisible(): boolean {
+  public get wzVisible(): boolean {
     return this._visible;
   }
 
-  set wzClickHide(value: boolean) {
+  public set wzClickHide(value: boolean) {
     this._clickHide = value;
   }
 
-  get wzClickHide(): boolean {
+  public get wzClickHide(): boolean {
     return this._clickHide;
   }
 
   @ContentChild(DropdownDirective) _origin;
-  @ContentChild(TreeComponent) _tree;
   @Output() _visibleChange = new Subject<boolean>();
   @ViewChild(CdkConnectedOverlay) _cdkOverlay: CdkConnectedOverlay;
   _onMouseEnterEvent(e: MouseEvent): void {
-    // console.log(e);
+    if (this.wzTrigger === 'hover') {
+      this._show();
+    }
   }
 
   _onMouseLeaveEvent(e: MouseEvent): void {
-    // console.log(e);
+    if (this.wzTrigger === 'hover') {
+      this._hide();
+    }
   }
 
   _hide(): void {
@@ -103,6 +107,7 @@ export class DropdownComponent implements OnInit, OnDestroy, AfterViewInit {
       this._hide();
     }
   }
+
   _setTriggerWidth() {
     this._triggerWidth = this._origin.elementRef.nativeElement.getBoundingClientRect().width;
     /** should remove after https://github.com/angular/material2/pull/8765 merged **/
@@ -131,25 +136,31 @@ export class DropdownComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnInit() {
-    // console.log(this._treeCont);
+    console.log(this._origin.elementRef.nativeElement);
   }
 
   ngAfterViewInit(): void {
     let mouse: Observable<boolean>;
-    // hover
-    const mouseEneterOrigin = fromEvent(this._origin.elementRef.nativeElement, 'mouseenter').pipe(mapTo(true));
-    const mouseLeaveOrigin = fromEvent(this._origin.elementRef.nativeElement, 'mouseleave').pipe(mapTo(false));
-    mouse = mouseEneterOrigin.pipe(merge(mouseLeaveOrigin));
-    // click
-    // mouse = fromEvent(this._origin.elementRef.nativeElement, 'click').pipe(mapTo(true));
-    // this._renderer.listen(this._origin.elementRef.nativeElement, 'click', (e) => {
-    //   e.preventDefault();
-    // });
+    if (this.wzTrigger === 'hover') {
+      const mouseEneterOrigin = fromEvent(this._origin.elementRef.nativeElement, 'mouseenter').pipe(mapTo(true));
+      const mouseLeaveOrigin = fromEvent(this._origin.elementRef.nativeElement, 'mouseleave').pipe(mapTo(false));
+      mouse = mouseEneterOrigin.pipe(merge(mouseLeaveOrigin));
+    }
+    if (this.wzTrigger === 'click') {
+      mouse = fromEvent(this._origin.elementRef.nativeElement, 'click').pipe(mapTo(true));
+      this._renderer.listen(this._origin.elementRef.nativeElement, 'click', (e) => {
+        e.preventDefault();
+      });
+    }
     const observable = mouse.pipe(merge(this._visibleChange));
     this._startSubscribe(observable);
   }
 
-  ngOnDestroy() {}
+  ngOnDestroy() {
+    if (this._subscription) {
+      this._subscription.unsubscribe();
+    }
+  }
 
   constructor(
     private _renderer: Renderer2,

@@ -1,6 +1,7 @@
 import { Directive, ElementRef, HostListener, Input } from '@angular/core';
 import * as EventUtils from './event.utils';
 import { Tree } from './tree';
+import { TreeInternalComponent } from './tree-internal.component';
 
 @Directive({
   selector: '[appTreeNodeValue]',
@@ -9,16 +10,21 @@ import { Tree } from './tree';
   }
 })
 export class TreeNodeValueDirective {
-  @Input()
-  public tree: Tree;
+  private tree: Tree;
 
   @HostListener('click', ['$event'])
-  onClick(event: { button: number }): void {
-    // event.stopPropagation();
+  onClick(event: { button: number, stopPropagation: Function }): void {
+    event.stopPropagation();
     if (EventUtils.isLeftButtonClicked(event as MouseEvent)) {
       console.log(this.tree.node.ptext);
     }
   }
-  constructor(public _elementRef: ElementRef) { }
+
+  constructor(
+    public component: TreeInternalComponent,
+    public _elementRef: ElementRef
+  ) {
+    this.tree = this.component.tree;
+  }
 
 }
