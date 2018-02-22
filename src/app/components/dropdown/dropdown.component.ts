@@ -44,7 +44,7 @@ import { DropdownDirective } from './dropdown.directive';
         (mouseenter)="_onMouseEnterEvent($event)"
         (mouseleave)="_onMouseLeaveEvent($event)"
         (click)="_clickDropDown($event)">
-        <ng-content select="app-tree"></ng-content>
+        <ng-content select="[dropdown-custom]"></ng-content>
       </div>
     </ng-template>
   `,

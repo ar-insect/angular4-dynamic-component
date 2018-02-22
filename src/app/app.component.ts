@@ -1,11 +1,12 @@
 import {
   Component, ViewChild, ViewChildren, ViewContainerRef, ComponentFactory,
   ComponentRef, ComponentFactoryResolver, OnInit, AfterViewInit, OnDestroy, QueryList, ElementRef,
-  Optional, Inject
+  Optional, Injector, ApplicationRef, TemplateRef
 } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { InputComponent } from './input/input.component';
 import { AppLayoutDirective } from './layout.directive';
+import { DomPortalHost, Portal, ComponentPortal, TemplatePortal } from '@angular/cdk/portal';
 
 @Component({
   selector: 'app-root',
@@ -19,9 +20,17 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChildren(AppLayoutDirective) appLayoutDirectives: QueryList<AppLayoutDirective>;
   @ViewChild("inputContainer", { read: ViewContainerRef }) container: ViewContainerRef;
   tree = window['tree'];
+
+  private portalHost: DomPortalHost;
+  private portal: ComponentPortal<InputComponent>;
+  @ViewChild('testTemplate') testTemplate: TemplateRef<any>;
+
   constructor(
     private fb: FormBuilder,
-    private resolver: ComponentFactoryResolver
+    private resolver: ComponentFactoryResolver,
+    private injector: Injector,
+    private appRef: ApplicationRef,
+    private viewContainerRef: ViewContainerRef
   ) {
     this.myform = this.fb.group({
       email: [
@@ -38,6 +47,21 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    const targetElement = document.querySelector('#target');
+      // Create a portalHost from a DOM element
+      this.portalHost = new DomPortalHost(
+        document.querySelector('#target'),
+        this.resolver,
+        this.appRef,
+        this.injector
+      );
+     // Locate the component factory for the HeaderComponent
+     const templatePortal = new TemplatePortal(
+      this.testTemplate,
+      this.viewContainerRef,
+      {$implicit: 'Bob'},
+      );
+      this.portalHost.attach(templatePortal);
   }
 
   getElementRef(nodeName?: string): ElementRef | Array<AppLayoutDirective> {
@@ -53,8 +77,6 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit() {
-    // console.log('app-tree', this.getElementRef('app-tree')['nativeElement']);
-    // console.log('app-dropdown', this.getElementRef('app-tree'));
   }
 
   formErrors = {
@@ -126,7 +148,6 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   remove(key: string): void {
-    // console.log(key);
     delete this.inputMap[key];
   }
 

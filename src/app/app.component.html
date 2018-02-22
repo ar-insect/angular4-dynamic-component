@@ -19,16 +19,21 @@
 </div>
 
 <div class="container">
-
+  <ng-template cdkPortal #testTemplate let-name>
+      <div>User {{ name }} </div>
+  </ng-template>
+  <div id="target"></div>
   <app-my-input>
     <app-input-message></app-input-message>
   </app-my-input>
 
   <app-dropdown [wzTrigger]="'click'">
-    <a app-dropdown>
-      Hover or click me
+    <a href class="" app-dropdown>
+      点击我～
     </a>
-    <app-tree [tree]="tree"></app-tree>
+    <div style="border:1px solid #ccc; max-height:300px; overflow: auto;" dropdown-custom>
+      <app-tree [tree]="tree"></app-tree>
+    </div>
   </app-dropdown>
 
 </div>
